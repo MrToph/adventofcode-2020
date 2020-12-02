@@ -1,8 +1,10 @@
+use std::cmp::Ordering;
+
 const TARGET_SUM: usize = 2020;
 
 pub fn run(list: &[usize]) -> Option<usize> {
     let mut list = list.to_owned();
-    list.sort();
+    list.sort_unstable();
     let mut left = 0;
     let mut right = list.len() - 1;
 
@@ -13,16 +15,17 @@ pub fn run(list: &[usize]) -> Option<usize> {
         // largest value
         let b: &usize = &list[right];
         let sum = a + b;
-        if sum == TARGET_SUM {
-            return Some(a * b);
-        } else if sum < TARGET_SUM {
+
+        match sum.cmp(&TARGET_SUM) {
+            Ordering::Equal => return Some(a * b),
+
             // can discard smallest value a
             // as forall c in L: a + c <= a + b < TARGET
-            left += 1;
-        } else {
+            Ordering::Less => left += 1,
+
             // can discard highest value b
             // as forall c in L: c + b >= a + b > TARGET
-            right -= 1;
+            Ordering::Greater => right -= 1,
         }
     }
 

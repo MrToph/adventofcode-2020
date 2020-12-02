@@ -1,3 +1,6 @@
+
+![Rust CI](https://github.com/MrToph/adventofcode-2020/workflows/Rust%20CI/badge.svg)
+
 # Advent Of Code 2020
 
 > Boilerplate forked from [tejasbusbane](https://github.com/tejasbubane/adventofcode-2020)

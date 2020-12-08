@@ -31,7 +31,7 @@ impl Program {
         self.visited.contains(&self.pc)
     }
 
-    fn step(&mut self) -> () {
+    fn step(&mut self) {
         self.visited.insert(self.pc);
         let current_instruction = &self.instructions[self.pc];
         // println!(

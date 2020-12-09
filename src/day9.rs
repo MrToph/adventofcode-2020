@@ -5,16 +5,13 @@ pub fn run(inputs: &[u64], preamble_length: usize) -> Result<u64, &'static str> 
     for i in 0..preamble_length {
         tally.insert(inputs[i]);
     }
+
     for i in preamble_length..inputs.len() {
-        println!("tally = {:?}", &tally);
-        let mut found = false;
-        for entry in &tally {
-            // all values in inputs are positive, so we only need to check if current - entry is also postive
-            if &inputs[i] > &entry && tally.contains(&(inputs[i] - entry)) {
-                found = true;
-                println!("{} = {} + {}", &inputs[i], &entry, inputs[i] - entry);
-            }
-        }
+        // println!("tally = {:?}", &tally);
+        let found = tally.iter().any(|&entry| {
+          &inputs[i] > &entry && tally.contains(&(inputs[i] - entry))
+        });
+
         if !found {
             return Ok(inputs[i]);
         }

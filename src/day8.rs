@@ -18,7 +18,7 @@ struct Program {
 impl Program {
     fn new(instructions: Vec<Instruction>) -> Program {
         let visited = HashSet::<usize>::new();
-        assert!(instructions.len() > 0, "no instructions passed");
+        assert!(!instructions.is_empty(), "no instructions passed");
         Program {
             accumulator: 0,
             pc: 0,

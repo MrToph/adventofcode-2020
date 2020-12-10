@@ -6,19 +6,26 @@ pub fn run(inputs: &[u64], preamble_length: usize) -> Result<u64, &'static str> 
         tally.insert(inputs[i]);
     }
 
-    for i in preamble_length..inputs.len() {
-        // println!("tally = {:?}", &tally);
-        let found = tally.iter().any(|&entry| {
-          &inputs[i] > &entry && tally.contains(&(inputs[i] - entry))
-        });
+    Ok(inputs
+        .iter()
+        .enumerate()
+        .skip(preamble_length)
+        .find(|(i, current_number)| {
+            // println!("tally = {:?}", &tally);
+            let found = tally
+                .iter()
+                .any(|entry| *current_number > entry && tally.contains(&(*current_number - entry)));
 
-        if !found {
-            return Ok(inputs[i]);
-        }
-        tally.remove(&inputs[i - preamble_length]);
-        tally.insert(inputs[i]);
-    }
-    panic!("all items could be matched")
+            if !found {
+                return true;
+            }
+            tally.remove(&inputs[i - preamble_length]);
+            tally.insert(**current_number);
+            return false;
+        })
+        .unwrap()
+        .1
+        .clone())
 }
 
 #[cfg(test)]

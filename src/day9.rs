@@ -6,7 +6,7 @@ pub fn run(inputs: &[u64], preamble_length: usize) -> Result<u64, &'static str> 
         tally.insert(inputs[i]);
     }
 
-    Ok(inputs
+    inputs
         .iter()
         .enumerate()
         .skip(preamble_length)
@@ -23,9 +23,8 @@ pub fn run(inputs: &[u64], preamble_length: usize) -> Result<u64, &'static str> 
             tally.insert(**current_number);
             return false;
         })
-        .unwrap()
-        .1
-        .clone())
+        .map(|pair| *pair.1)
+        .ok_or("value not found")
 }
 
 #[cfg(test)]

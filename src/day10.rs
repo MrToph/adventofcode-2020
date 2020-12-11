@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 pub fn run(inputs: &[u64]) -> Result<u64, &'static str> {
     let mut inputs = inputs.to_owned();
     inputs.sort_unstable();
@@ -21,6 +23,47 @@ pub fn run(inputs: &[u64]) -> Result<u64, &'static str> {
     Ok(one_differences * three_differences)
 }
 
+// part 2
+pub fn count(adapters: &[u64], target: &u64, hashmap: &mut HashMap<usize, u64>) -> u64 {
+    if !hashmap.contains_key(&adapters.len()) {
+        if adapters.len() == 0 {
+            return 0;
+        } else if adapters.len() == 1 {
+            // only valid if within range of 3 from target
+            if target - adapters[0] <= 3 {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+        // now do dynmaic programming, see what we could reach within a single step (max 3 diff)
+        let mut sum: u64 = 0;
+        let current = adapters[0];
+        for (index, jolt) in adapters.iter().enumerate().skip(1) {
+            if jolt - current <= 3 {
+                sum += count(&adapters[index..], target, hashmap)
+            } else {
+                break;
+            }
+        }
+
+        hashmap.insert(adapters.len(), sum);
+    }
+
+    return *hashmap.get(&adapters.len()).unwrap();
+}
+pub fn run2(inputs: &[u64]) -> Result<u64, &'static str> {
+    let mut inputs = inputs.to_owned();
+    inputs.insert(0, 0);
+    inputs.sort_unstable();
+
+    let my_adapter = inputs.last().unwrap() + 3;
+
+    let mut cache = HashMap::<usize, u64>::new();
+    Ok(count(&inputs, &my_adapter, &mut cache))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -34,13 +77,23 @@ mod tests {
         89, 158, 107, 77, 112, 5, 83, 58, 21, 2, 66,
     ];
 
+    // #[test]
+    // fn part1_works_for_sample_input() {
+    //     assert_eq!(run(&SAMPLE_INPUT).unwrap(), 35);
+    // }
+
+    // #[test]
+    // fn part1_works_for_puzzle_input() {
+    //     assert_eq!(run(&PUZZLE_INPUT).unwrap(), 2046);
+    // }
+
     #[test]
-    fn part1_works_for_sample_input() {
-        assert_eq!(run(&SAMPLE_INPUT).unwrap(), 35);
+    fn part2_works_for_sample_input() {
+        assert_eq!(run2(&SAMPLE_INPUT).unwrap(), 8);
     }
 
     #[test]
-    fn part1_works_for_puzzle_input() {
-        assert_eq!(run(&PUZZLE_INPUT).unwrap(), 2046);
+    fn part2_works_for_puzzle_input() {
+        assert_eq!(run2(&PUZZLE_INPUT).unwrap(), 1157018619904);
     }
 }

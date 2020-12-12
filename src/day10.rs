@@ -26,7 +26,7 @@ pub fn run(inputs: &[u64]) -> Result<u64, &'static str> {
 // part 2
 pub fn count(adapters: &[u64], target: &u64, hashmap: &mut HashMap<usize, u64>) -> u64 {
     if !hashmap.contains_key(&adapters.len()) {
-        if adapters.len() == 0 {
+        if adapters.is_empty() {
             return 0;
         } else if adapters.len() == 1 {
             // only valid if within range of 3 from target

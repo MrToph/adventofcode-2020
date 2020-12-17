@@ -1,3 +1,4 @@
+#![allow(clippy::map_entry)]
 use std::collections::HashMap;
 
 pub fn run(inputs: &[u64]) -> Result<u64, &'static str> {
